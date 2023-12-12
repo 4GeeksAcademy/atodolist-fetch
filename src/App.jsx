@@ -1,7 +1,10 @@
 /* eslint-disable no-unused-vars */
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './assets/index.css'
 import { CiCircleRemove } from "react-icons/ci";
+import { ref } from 'firebase/database';
+import { db } from './lib/firebase';
+import { collection, getDocs } from 'firebase/firestore';
 
 const TodoList = () => {
     const [inputTask, setInputTask] = useState('');
@@ -25,6 +28,21 @@ const TodoList = () => {
    const handleInputChange = (event) => {
         setInputTask(event.target.value);
     };
+    useEffect(()=>{
+        const todoReference = collection(db,"todos");
+        const getData =async () =>{
+            const data = await getDocs(todoReference);
+            const todos = data.docs.map((doc)=> ({
+                id: doc.id,
+                ...doc.data(),
+            }));
+            // eslint-disable-next-line no-undef
+            setTodos(todos);
+        };
+        getData()
+    },[]);
+
+
 
    return (
         <div className="Todo">

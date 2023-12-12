@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from 'react';
 import './assets/index.css'
 import { CiCircleRemove } from "react-icons/ci";
-import { ref } from 'firebase/database';
 import { db } from './lib/firebase';
 import { collection, getDocs } from 'firebase/firestore';
 
@@ -29,7 +28,7 @@ const TodoList = () => {
         setInputTask(event.target.value);
     };
     useEffect(()=>{
-        const todoReference = collection(db,"todos");
+        const todoReference = collection(db,"todo");
         const getData =async () =>{
             const data = await getDocs(todoReference);
             const todos = data.docs.map((doc)=> ({
@@ -37,7 +36,7 @@ const TodoList = () => {
                 ...doc.data(),
             }));
             // eslint-disable-next-line no-undef
-            setTodos(todos);
+            setList(todos);
         };
         getData()
     },[]);
@@ -58,7 +57,7 @@ const TodoList = () => {
            <ul>
                 { list.map((todo) => (
                     <li className="task" key={todo.id}>
-                        {todo.todo}
+                        {todo.text}
                         <button onClick={() => handleDeleteTodo(todo.id)}>
                         <CiCircleRemove />
                        </button>
